@@ -20,7 +20,8 @@ public class TestBase {
         options.addArguments("--lang=ru");
 
 //        // Конфигурация для удаленного запуска
-        Configuration.remote = "http://selenium-chrome:4444/wd/hub";
+//        Configuration.browser = System.getProperty("browser");
+//        Configuration.browserVersion = System.getProperty("version");
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("enableVNC", true);
