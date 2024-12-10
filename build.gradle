@@ -1,0 +1,123 @@
+plugins {
+    id 'java'
+    id "io.qameta.allure" version "2.9.6"
+}
+
+repositories {
+    mavenCentral()
+}
+
+allure {
+    report {
+        version.set("2.19.0")
+    }
+    adapter { // отвечает за появление папочки build/allure-results
+        aspectjWeaver.set(true) //обработка аннотации @Step
+        frameworks {
+            junit5 { //название фреймворка
+                adapterVersion.set("2.19.0") //версия интеграции фреймворка и Allure
+            }
+        }
+    }
+}
+// версия Selenide специально не 6, т.к. параллельный запуск лучше работает на версии 5.24.0
+def selenideVersion = '5.24.0',
+    junitVersion = '5.9.0',
+    fakerVersion = "1.0.2",
+    slf4jVersion = '2.0.5',
+    allureVersion = '2.20.0',
+    pdfVersion = "1.7.0",
+    xlsVersion = '1.6.0',
+    assertjVersion = '3.23.1',
+    csvVersion = '5.7.1'
+
+dependencies {
+    testImplementation(
+            "com.codeborne:selenide:$selenideVersion",
+            "io.qameta.allure:allure-selenide:$allureVersion",
+            "com.github.javafaker:javafaker:$fakerVersion",
+            "org.assertj:assertj-core:$assertjVersion",
+            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "com.codeborne:pdf-test:$pdfVersion",
+            "com.codeborne:xls-test:$xlsVersion",
+            "com.opencsv:opencsv:$csvVersion",
+            "commons-io:commons-io:2.11.0",
+            "io.github.bonigarcia:webdrivermanager:5.5.3"
+    )
+
+    testRuntimeOnly(
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+tasks.withType(Test).configureEach {
+
+    def environment = project.hasProperty('env') ? project.findProperty('env') : 'dev'
+
+//        def environment = 'dev'
+//        def environment = 'stage'
+
+    // Установка системных свойств для использования во время выполнения тестов
+    System.setProperty('BASE_URL',              getProperty(environment as String, 'BASE_URL'))
+
+    // Отладочное сообщение для проверки значения системного свойства
+    println "System property 'BASE_URL': ${System.getProperty('BASE_URL')}"
+
+    systemProperties(System.getProperties())
+    useJUnitPlatform()
+
+    if (System.getProperty("threads") != null) {
+        systemProperties += [
+                'junit.jupiter.execution.parallel.enabled'                 : true,
+                'junit.jupiter.execution.parallel.mode.default'            : 'concurrent',
+                'junit.jupiter.execution.parallel.mode.classes.default'    : 'concurrent',
+                'junit.jupiter.execution.parallel.config.strategy'         : 'fixed',
+                'junit.jupiter.execution.parallel.config.fixed.parallelism': System.getProperty("threads").toInteger()
+        ]
+    }
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+
+}
+
+def test = tasks.named("test") {
+    useJUnitPlatform {
+        excludeTags "regress"
+    }
+}
+
+def integrationTest = tasks.register("regress", Test) {
+    useJUnitPlatform {
+        includeTags "regress"
+        includeTags "smoke"
+    }
+    shouldRunAfter test
+}
+
+tasks.named("check") {
+    dependsOn integrationTest
+}
+
+def getProperty(String environment, String propertyName) {
+    def configFile = file("src/test/resources/config/${environment}.properties")
+    def config = new Properties()
+    config.load(new FileInputStream(configFile))
+    println "Loaded properties from ${configFile}: ${config}"
+    def propertyValue = config.getProperty(propertyName)
+    println "Retrieved property ${propertyName}: ${propertyValue}"
+    return propertyValue
+}
