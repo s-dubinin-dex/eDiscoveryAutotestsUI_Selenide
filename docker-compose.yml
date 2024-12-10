@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium-chrome
+    ports:
+      - "4444:4444"  # WebDriver API
+    shm_size: "2g"   # Увеличенный объем общей памяти для предотвращения ошибок Chrome
+    environment:
+      - SE_NODE_SESSION_TIMEOUT=60 # Таймаут сессии в секундах
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true # Разрешить больше одной сессии
+      - SE_NODE_MAX_SESSIONS=5 # Установить лимит сессий
+    volumes:
+      - /dev/shm:/dev/shm # Используется для улучшения производительности Chrome
+
+#  # (опционально) добавьте сервис для передачи отчетов или тестовых файлов
+#  selenoid-ui:
+#    image: aerokube/selenoid-ui:latest-release
+#    container_name: selenoid-ui
+#    ports:
+#      - "8081:8080"
+#    links:
+#      - selenium-chrome
+#    environment:
+#      - SELENOID_URI=http://selenium-chrome:4444
