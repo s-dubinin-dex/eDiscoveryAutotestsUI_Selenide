@@ -20,7 +20,7 @@ public class TestBase {
         options.addArguments("--lang=ru");
 
 //        // Конфигурация для удаленного запуска
-        Configuration.remote = "http://host.docker.internal:4444/wd/hub";
+        Configuration.remote = "http://ediscoveryautotests_selenium-network:4444/wd/hub";
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("enableVNC", true);
