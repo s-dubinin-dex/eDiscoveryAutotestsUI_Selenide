@@ -2,7 +2,7 @@ package eDiscovery.pages;
 
 
 import com.codeborne.selenide.SelenideElement;
-import eDiscovery.pages.searchQuery.SearchQueryPage;
+import eDiscovery.pages.searchQuery.SearchQueryListPage;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selectors.*;
@@ -34,13 +34,13 @@ public class AuthorizationPage {
     }
 
     @Step("Нажатие на кнопку \"Авторизоваться\"")
-    public SearchQueryPage clickLoginButton(){
+    public SearchQueryListPage clickLoginButton(){
         loginButton.click();
-        return page(SearchQueryPage.class);
+        return page(SearchQueryListPage.class);
     }
 
     @Step("Авторизация")
-    public SearchQueryPage login(String login, String password){
+    public SearchQueryListPage login(String login, String password){
         return this
                 .typeLogin(login)
                 .typePassword(password)

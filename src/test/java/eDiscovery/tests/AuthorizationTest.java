@@ -3,7 +3,7 @@ package eDiscovery.tests;
 
 import eDiscovery.TestBase;
 import eDiscovery.pages.AuthorizationPage;
-import eDiscovery.pages.searchQuery.SearchQueryPage;
+import eDiscovery.pages.searchQuery.SearchQueryListPage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -26,10 +26,9 @@ class AuthorizationTest extends TestBase {
     @Severity(SeverityLevel.BLOCKER)
     void authorizationPositiveTest() {
 
-        SearchQueryPage searchQueryPage = authorizationPage.openPage().login(login, password);
+        SearchQueryListPage searchQueryListPage = authorizationPage.openPage().login(login, password);
 
-        step("Открылась страница \"Поисковые запросы\"", searchQueryPage::pageHeaderDisplayed);
-        step("Открылась страница \"Поисковые запросы\"", searchQueryPage::pageHeaderContainsText);
+        searchQueryListPage.pageHeaderDisplayed().pageHeaderContainsText();
     }
 
 }
