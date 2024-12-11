@@ -65,12 +65,21 @@ tasks.withType(Test).configureEach {
 
 //        def environment = 'dev'
 //        def environment = 'stage'
+    def remoteUrl   = project.hasProperty('remoteUrl') ? project.findProperty('remoteUrl') : null
+    def browser     = project.hasProperty('browser') ? project.findProperty('browser') : null
+    def version     = project.hasProperty('version') ? project.findProperty('version') : null
 
     // Установка системных свойств для использования во время выполнения тестов
     System.setProperty('BASE_URL',              getProperty(environment as String, 'BASE_URL'))
+    System.setProperty('REMOTE_URL',            remoteUrl as String)
+    System.setProperty('BROWSER',               browser as String)
+    System.setProperty('VERSION',               version as String)
 
     // Отладочное сообщение для проверки значения системного свойства
-    println "System property 'BASE_URL': ${System.getProperty('BASE_URL')}"
+    println "System property 'BASE_URL':    ${System.getProperty('BASE_URL')}"
+    println "System property 'REMOTE_URL':  ${System.getProperty('REMOTE_URL')}"
+    println "System property 'BROWSER':     ${System.getProperty('BROWSER')}"
+    println "System property 'VERSION':     ${System.getProperty('VERSION')}"
 
     systemProperties(System.getProperties())
     useJUnitPlatform()

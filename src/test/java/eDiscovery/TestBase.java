@@ -18,14 +18,13 @@ public class TestBase {
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = System.getProperty("BASE_URL");
 
-        String remoteUrl = System.getProperty("url");
-        System.out.println(remoteUrl);
+        String remoteUrl = System.getProperty("REMOTE_URL");
+        String browser = System.getProperty("BROWSER");
+        String version = System.getProperty("VERSION");
 
-        String browser = System.getProperty("browser");
-        System.out.println(browser);
-
-        String version = System.getProperty("version");
-        System.out.println(version);
+        System.out.println("remoteUrl : " + remoteUrl);
+        System.out.println("Browser : " + browser);
+        System.out.println("Browser version: " +version);
 
         // Конфигурация для удаленного запуска
         Configuration.remote = remoteUrl;
