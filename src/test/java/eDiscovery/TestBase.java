@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
@@ -16,10 +18,16 @@ public class TestBase {
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = System.getProperty("BASE_URL");
 
+        // Конфигурация для удаленного запуска
+        Configuration.remote = System.getProperty("url");
+
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("intl.accept_languages", "ru");
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=ru");
+        options.setExperimentalOption("prefs", prefs);
 
-//        // Конфигурация для удаленного запуска
 //        Configuration.browser = System.getProperty("browser");
 //        Configuration.browserVersion = System.getProperty("version");
 
