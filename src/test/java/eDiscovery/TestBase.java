@@ -28,8 +28,8 @@ public class TestBase {
         options.addArguments("--lang=ru");
         options.setExperimentalOption("prefs", prefs);
 
-//        Configuration.browser = System.getProperty("browser");
-//        Configuration.browserVersion = System.getProperty("version");
+        Configuration.browser = System.getProperty("browser");
+        Configuration.browserVersion = System.getProperty("version");
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("enableVNC", true);
