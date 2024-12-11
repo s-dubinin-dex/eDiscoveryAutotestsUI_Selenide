@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static eDiscovery.data.enums.DataGeneratorCommon.getRandomName;
 
-public class SearchQueryPageTest extends TestBase {
+public class SearchQueryTest extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
     String login = "test@gmail.com";
@@ -20,12 +20,12 @@ public class SearchQueryPageTest extends TestBase {
 
     @Test
     @Tag("smoke")
-    @Feature("Место поиска")
-    @Story("Создание места поиска")
-    @DisplayName("Создание места поиска")
-    @Description("Тест проверяет возможность создания места поиска")
+    @Feature("Поисковый запрос")
+    @Story("Создание поискового запроса")
+    @DisplayName("Создание поискового запроса")
+    @Description("Тест проверяет возможность создания поискового запроса")
     @Severity(SeverityLevel.BLOCKER)
-    void searchPlaceWithTextCreationPositiveTest(){
+    void searchQueryWithTextCreationPositiveTest(){
         SearchQueryListPage searchQueryListPage = authorizationPage.openPage().login(login, password);
 
         SearchQueryCreationEditingPage searchQueryCreationPage = searchQueryListPage
