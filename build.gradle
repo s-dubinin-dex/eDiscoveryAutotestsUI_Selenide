@@ -1,85 +1,95 @@
 plugins {
     id 'java'
-    id "io.qameta.allure" version "2.9.6"
+    id "io.qameta.allure" version "2.12.0"
 }
 
 repositories {
     mavenCentral()
 }
+def
+    junitVersion = '5.12.0',
+    webDriverManagerVersion = '5.9.3',
+    selenideVersion = '7.7.3',
+    allureVersion = '2.27.0',
+    assertjVersion = '3.27.3',
+    fakerVersion = "1.0.2",
+    commonsIOVersion = '2.18.0',
+    pdfVersion = "1.9.2",
+    xlsVersion = '1.7.2',
+    csvVersion = '5.10',
+    slf4jVersion = '2.0.17'
 
 allure {
     report {
-        version.set("2.19.0")
+        version.set("$allureVersion")
     }
     adapter { // отвечает за появление папочки build/allure-results
         aspectjWeaver.set(true) //обработка аннотации @Step
         frameworks {
             junit5 { //название фреймворка
-                adapterVersion.set("2.19.0") //версия интеграции фреймворка и Allure
+                adapterVersion.set("$allureVersion") //версия интеграции фреймворка и Allure
             }
         }
     }
 }
 // версия Selenide специально не 6, т.к. параллельный запуск лучше работает на версии 5.24.0
-def selenideVersion = '5.24.0',
-    junitVersion = '5.9.0',
-    fakerVersion = "1.0.2",
-    slf4jVersion = '2.0.5',
-    allureVersion = '2.20.0',
-    pdfVersion = "1.7.0",
-    xlsVersion = '1.6.0',
-    assertjVersion = '3.23.1',
-    csvVersion = '5.7.1'
+
 
 dependencies {
     testImplementation(
+            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion",
             "com.codeborne:selenide:$selenideVersion",
             "io.qameta.allure:allure-selenide:$allureVersion",
-            "com.github.javafaker:javafaker:$fakerVersion",
             "org.assertj:assertj-core:$assertjVersion",
-            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "com.github.javafaker:javafaker:$fakerVersion",
+            "commons-io:commons-io:$commonsIOVersion",
             "com.codeborne:pdf-test:$pdfVersion",
             "com.codeborne:xls-test:$xlsVersion",
-            "com.opencsv:opencsv:$csvVersion",
-            "commons-io:commons-io:2.11.0",
-            "io.github.bonigarcia:webdrivermanager:5.5.3"
+            "com.opencsv:opencsv:$csvVersion"
     )
-
     testRuntimeOnly(
-            "org.slf4j:slf4j-simple:$slf4jVersion",
-            "org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion"
+    )
 }
 
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 
 tasks.withType(Test).configureEach {
 
-    def environment = project.hasProperty('env') ? project.findProperty('env') : 'dev'
-
-//        def environment = 'dev'
-//        def environment = 'stage'
-    def remoteUrl   = project.hasProperty('remoteUrl') ? project.findProperty('remoteUrl') : null
-    def browser     = project.hasProperty('browser') ? project.findProperty('browser') : null
-    def version     = project.hasProperty('version') ? project.findProperty('version') : null
+    def environment = project.findProperty('env') ?: 'dev'
+    def remoteUrl   = project.findProperty('remoteUrl') ?: "http://localhost:4444/wd/hub"
+    def threads     = project.findProperty("threads") ?: null
 
     // Установка системных свойств для использования во время выполнения тестов
-    System.setProperty('BASE_URL',              getProperty(environment as String, 'BASE_URL'))
-    System.setProperty('REMOTE_URL',            remoteUrl as String)
-    System.setProperty('BROWSER',               browser as String)
-    System.setProperty('VERSION',               version as String)
+    System.setProperty('BASE_URL',              getProperty(environment as String, 'BASE_URL'));
+
+    System.setProperty('ADMIN_USERNAME',        getProperty(environment as String, 'ADMIN_USERNAME'));
+    System.setProperty('ADMIN_PASSWORD',        getProperty(environment as String, 'ADMIN_PASSWORD'));
+
+    if (remoteUrl != null){
+        System.setProperty('REMOTE_URL',            remoteUrl as String)
+    }
+
+    if (threads != null){
+        System.setProperty('threads',               threads as String);
+    }
 
     // Отладочное сообщение для проверки значения системного свойства
-    println "System property 'BASE_URL':    ${System.getProperty('BASE_URL')}"
-    println "System property 'REMOTE_URL':  ${System.getProperty('REMOTE_URL')}"
-    println "System property 'BROWSER':     ${System.getProperty('BROWSER')}"
-    println "System property 'VERSION':     ${System.getProperty('VERSION')}"
+    println "System property 'BASE_URL':            ${System.getProperty('BASE_URL')}"
+    println "System property 'ADMIN_USERNAME':      ${System.getProperty('ADMIN_USERNAME')}"
+    println "System property 'ADMIN_PASSWORD':      ${System.getProperty('ADMIN_PASSWORD')}"
+
+    println "System property 'REMOTE_URL':          ${System.getProperty('REMOTE_URL')}"
+
+    println "System property 'threads':             ${System.getProperty('threads')}"
 
     systemProperties(System.getProperties())
     useJUnitPlatform()
@@ -101,24 +111,6 @@ tasks.withType(Test).configureEach {
         }
     }
 
-}
-
-def test = tasks.named("test") {
-    useJUnitPlatform {
-        excludeTags "regress"
-    }
-}
-
-def integrationTest = tasks.register("regress", Test) {
-    useJUnitPlatform {
-        includeTags "regress"
-        includeTags "smoke"
-    }
-    shouldRunAfter test
-}
-
-tasks.named("check") {
-    dependsOn integrationTest
 }
 
 def getProperty(String environment, String propertyName) {

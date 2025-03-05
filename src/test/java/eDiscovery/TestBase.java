@@ -2,6 +2,7 @@ package eDiscovery;
 
 import com.codeborne.selenide.Configuration;
 import eDiscovery.helpers.Attach;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,35 +16,25 @@ public class TestBase {
 
     @BeforeAll
     static void setUp() {
+        WebDriverManager.chromedriver().setup();
+
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = System.getProperty("BASE_URL");
 
         String remoteUrl = System.getProperty("REMOTE_URL");
-        String browser = System.getProperty("BROWSER");
-        String version = System.getProperty("VERSION");
 
-        System.out.println("remoteUrl : " + remoteUrl);
-        System.out.println("Browser : " + browser);
-        System.out.println("Browser version: " +version);
-
-        // Конфигурация для удаленного запуска
-        Configuration.remote = remoteUrl;
-
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("intl.accept_languages", "ru");
+        if (remoteUrl != null){
+            Configuration.remote = remoteUrl;
+        }
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--lang=ru");
-        options.setExperimentalOption("prefs", prefs);
+        options.setCapability("se:options", Map.of(
+                "enableVNC", true,
+                "enableVideo", false
+        ));
 
-        Configuration.browser = browser;
-        Configuration.browserVersion = version;
+        options.setExperimentalOption("prefs", Map.of("intl.accept_languages", "ru"));
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("enableVNC", true);
-        capabilities.setCapability("enableVideo", false);
-
-        Configuration.browserCapabilities = capabilities;
         Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
     }
 
