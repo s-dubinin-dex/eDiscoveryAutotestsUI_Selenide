@@ -1,8 +1,7 @@
-package eDiscovery.pages;
+package eDiscovery.pages.authorization;
 
 
 import com.codeborne.selenide.SelenideElement;
-import eDiscovery.pages.searchQuery.SearchQueryListPage;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selectors.*;
@@ -10,10 +9,10 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class AuthorizationPage {
 
-    SelenideElement
-            loginInput = $(byId("username")),
-            passwordInput = $("input[type='password']"),
-            loginButton = $(byText("Авторизоваться"));
+    private final SelenideElement
+            loginInput      = $(byId("username")),
+            passwordInput   = $("input[type='password']"),
+            loginButton     = $(byText("Авторизоваться"));
 
     @Step("Открываем сайт")
     public AuthorizationPage openPage(){
@@ -22,28 +21,28 @@ public class AuthorizationPage {
     }
 
     @Step("Ввод логина")
-    public AuthorizationPage typeLogin(String value){
+    public AuthorizationPage inputLogin(String value){
         loginInput.setValue(value);
         return this;
     }
 
     @Step("Ввод пароля")
-    public AuthorizationPage typePassword(String value){
+    public AuthorizationPage inputPassword(String value){
         passwordInput.setValue(value);
         return this;
     }
 
     @Step("Нажатие на кнопку \"Авторизоваться\"")
-    public SearchQueryListPage clickLoginButton(){
+    public AuthorizationPage clickLoginButton(){
         loginButton.click();
-        return page(SearchQueryListPage.class);
+        return this;
     }
 
     @Step("Авторизация")
-    public SearchQueryListPage login(String login, String password){
+    public AuthorizationPage login(String login, String password){
         return this
-                .typeLogin(login)
-                .typePassword(password)
+                .inputLogin(login)
+                .inputPassword(password)
                 .clickLoginButton();
     }
 

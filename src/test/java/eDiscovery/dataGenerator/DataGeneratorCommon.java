@@ -1,4 +1,4 @@
-package eDiscovery.data.enums;
+package eDiscovery.dataGenerator;
 
 import com.github.javafaker.Faker;
 
