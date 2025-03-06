@@ -2,6 +2,7 @@ package eDiscovery.tests.deal.searchPlace;
 
 import eDiscovery.TestBase;
 import eDiscovery.pages.authorization.AuthorizationPage;
+import eDiscovery.pages.common.entityActionResult.EntityActionResultWindow;
 import eDiscovery.pages.common.menu.Menu;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceCreationEditingPage;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceListPage;
@@ -20,6 +21,7 @@ public class SearchPlaceCreationTest extends TestBase {
     Menu menu = page(Menu.class);
     SearchPlaceListPage searchPlaceListPage = page(SearchPlaceListPage.class);
     SearchPlaceCreationEditingPage searchPlaceCreationEditingPage = page(SearchPlaceCreationEditingPage.class);
+    EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
 
     @Test
     @Tag("smoke")
@@ -29,6 +31,8 @@ public class SearchPlaceCreationTest extends TestBase {
     @Description("Тест проверяет возможность создания места поиска FileShare - SMB")
     @Severity(SeverityLevel.BLOCKER)
     void searchPlaceFileShareSMBCreationPositiveTest() {
+        String searchPlaceName = getRandomName();
+
         authorizationPage
                 .openPage()
                 .login(Admin.username, Admin.password);
@@ -41,7 +45,7 @@ public class SearchPlaceCreationTest extends TestBase {
 
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
-                .inputName(String.format("Test from Selenide %s", getRandomName()))
+                .inputName(searchPlaceName)
                 .selectCategory("FileShare")
                 .selectType("SMB")
                 .inputUri("10.5.0.1")
@@ -49,6 +53,9 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("C:\\\\")
                 .clickCreateNewSearchPlace();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
 
         searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
@@ -61,6 +68,8 @@ public class SearchPlaceCreationTest extends TestBase {
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP без порта")
     @Severity(SeverityLevel.BLOCKER)
     void searchPlaceFileShareFTPWithoutPortCreationPositiveTest() {
+        String searchPlaceName = getRandomName();
+
         authorizationPage
                 .openPage()
                 .login(Admin.username, Admin.password);
@@ -73,7 +82,7 @@ public class SearchPlaceCreationTest extends TestBase {
 
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
-                .inputName(String.format("Test from Selenide %s", getRandomName()))
+                .inputName(searchPlaceName)
                 .selectCategory("FileShare")
                 .selectType("FTP")
                 .inputUri("10.5.0.1")
@@ -81,6 +90,9 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
 
         searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
@@ -93,6 +105,8 @@ public class SearchPlaceCreationTest extends TestBase {
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP с портом")
     @Severity(SeverityLevel.BLOCKER)
     void searchPlaceFileShareFTPWithPortCreationPositiveTest() {
+        String searchPlaceName = getRandomName();
+
         authorizationPage
                 .openPage()
                 .login(Admin.username, Admin.password);
@@ -105,7 +119,7 @@ public class SearchPlaceCreationTest extends TestBase {
 
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
-                .inputName(String.format("Test from Selenide %s", getRandomName()))
+                .inputName(searchPlaceName)
                 .selectCategory("FileShare")
                 .selectType("FTP")
                 .inputUri("10.5.0.1")
@@ -114,6 +128,9 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
 
         searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }

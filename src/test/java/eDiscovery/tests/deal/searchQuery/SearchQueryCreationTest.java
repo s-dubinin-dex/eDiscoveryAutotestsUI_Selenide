@@ -2,6 +2,7 @@ package eDiscovery.tests.deal.searchQuery;
 
 import eDiscovery.TestBase;
 import eDiscovery.pages.authorization.AuthorizationPage;
+import eDiscovery.pages.common.entityActionResult.EntityActionResultWindow;
 import eDiscovery.pages.deal.searchQuery.SearchQueryCreationEditingPage;
 import eDiscovery.pages.deal.searchQuery.SearchQueryListPage;
 import io.qameta.allure.*;
@@ -19,6 +20,7 @@ public class SearchQueryCreationTest extends TestBase {
     AuthorizationPage authorizationPage = new AuthorizationPage();
     SearchQueryListPage searchQueryListPage = page(SearchQueryListPage.class);
     SearchQueryCreationEditingPage searchQueryCreationPage = page(SearchQueryCreationEditingPage.class);
+    EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
 
     @ParameterizedTest
     @Tag("smoke")
@@ -32,6 +34,7 @@ public class SearchQueryCreationTest extends TestBase {
             "Regex, \\d{10}"
     })
     void searchQueryWithTextCreationPositiveTest(String searchQueryType, String searchQueryValue){
+        String searchQueryName = getRandomName();
 
         authorizationPage
                 .openPage()
@@ -42,10 +45,13 @@ public class SearchQueryCreationTest extends TestBase {
 
         searchQueryCreationPage
                 .pageHeaderContainsText(SearchQueryCreationEditingPage.HEADER_CREATION_TEXT)
-                .inputName(String.format("Test from Selenide %s", getRandomName()))
+                .inputName(searchQueryName)
                 .selectType(searchQueryType)
                 .inputValue(searchQueryValue)
                 .clickCreateNewSearchQuery();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Поисковый запрос «%s» успешно добавлен", searchQueryName));
 
         searchQueryListPage
                 .pageHeaderContainsText(SearchQueryListPage.HEADER_LIST_TEXT);
