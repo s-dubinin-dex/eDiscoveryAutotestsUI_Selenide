@@ -11,11 +11,18 @@ public class  Menu{
     private final SelenideElement
             searchQueryLink                 = $(byText("Поисковые запросы")),
 
+            metadataFilterMenuLink          = $(byText("Фильтры по метаданным")),
+
             searchPlaceMenuFolder           = $x("//span[text()='Места поиска']"),
             searchPlaceMenuLink             = $x("//a[contains(text(), 'Места поиска')]"),
             searchPlaceGroupMenuLink        = $(byLinkText("Группы мест поиска"))
 
             ;
+
+    public Menu openMetadataFiltersListPage() {
+        metadataFilterMenuLink.click();
+        return this;
+    }
 
     public Menu openSearchPlaceListPage(){
         searchPlaceMenuFolder.click();
