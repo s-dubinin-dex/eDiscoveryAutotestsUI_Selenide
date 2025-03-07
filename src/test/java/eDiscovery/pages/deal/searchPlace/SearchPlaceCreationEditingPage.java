@@ -3,9 +3,9 @@ package eDiscovery.pages.deal.searchPlace;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -27,8 +27,8 @@ public class SearchPlaceCreationEditingPage {
             searchPlaceCreateNewButton          = $(byText("Создать место поиска"));
 
     private final ElementsCollection
-            searchPlaceCategoryDropDown         = $$("li[role='option']"),
-            searchPlaceTypeDropDown             = $$("li[role='option']");
+            searchPlaceCategoryValues           = $$("li[role='option']"),
+            searchPlaceTypeValues               = $$("li[role='option']");
 
     @Step("Заголовок страницы отображает текст")
     public SearchPlaceCreationEditingPage pageHeaderContainsText(String text){
@@ -45,14 +45,14 @@ public class SearchPlaceCreationEditingPage {
     @Step("Выбор категории места поиска")
     public SearchPlaceCreationEditingPage selectCategory(String value){
         searchPlaceCategoryDropdownTrigger.click();
-        searchPlaceCategoryDropDown.findBy(text(value)).click();
+        searchPlaceCategoryValues.findBy(text(value)).click();
         return this;
     }
 
     @Step("Выбор типа места поиска")
     public SearchPlaceCreationEditingPage selectType(String value){
         searchPlaceTypeDropDownTrigger.click();
-        searchPlaceTypeDropDown.findBy(text(value)).click();
+        searchPlaceTypeValues.findBy(text(value)).click();
         return this;
     }
 
@@ -65,6 +65,7 @@ public class SearchPlaceCreationEditingPage {
     @Step("Ввод Параметры - Порт")
     public SearchPlaceCreationEditingPage inputPort(String value){
         parameterPort.setValue(value);
+        parameterPort.sendKeys(Keys.ENTER);
         return this;
     }
 

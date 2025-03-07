@@ -24,7 +24,7 @@ class AuthorizationPositiveTest extends TestBase {
     @Story("Авторизация")
     @DisplayName("Авторизация с валидными данными")
     @Severity(SeverityLevel.BLOCKER)
-    void authorizationPositiveTest() {
+    public void authorizationPositiveTest() {
         authorizationPage
                 .openPage()
                 .login(Admin.username, Admin.password);

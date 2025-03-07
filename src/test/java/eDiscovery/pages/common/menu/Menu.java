@@ -19,6 +19,11 @@ public class  Menu{
 
             ;
 
+    public Menu openSearchQueryListPage(){
+        searchQueryLink.click();
+        return this;
+    }
+
     public Menu openMetadataFiltersListPage() {
         metadataFilterMenuLink.click();
         return this;
@@ -29,4 +34,5 @@ public class  Menu{
         searchPlaceMenuLink.click();
         return this;
     }
+
 }

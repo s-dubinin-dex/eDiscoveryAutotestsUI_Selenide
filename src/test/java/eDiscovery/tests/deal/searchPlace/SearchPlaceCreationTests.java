@@ -7,15 +7,13 @@ import eDiscovery.pages.common.menu.Menu;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceCreationEditingPage;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceListPage;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
 
-public class SearchPlaceCreationTest extends TestBase {
+public class SearchPlaceCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
     Menu menu = page(Menu.class);
@@ -23,16 +21,10 @@ public class SearchPlaceCreationTest extends TestBase {
     SearchPlaceCreationEditingPage searchPlaceCreationEditingPage = page(SearchPlaceCreationEditingPage.class);
     EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
 
-    @Test
-    @Tag("smoke")
-    @Feature("Место поиска")
-    @Story("Создание места поиска")
-    @DisplayName("Создание места поиска FileShare - SMB")
-    @Description("Тест проверяет возможность создания места поиска FileShare - SMB")
-    @Severity(SeverityLevel.BLOCKER)
-    void searchPlaceFileShareSMBCreationPositiveTest() {
-        String searchPlaceName = getRandomName();
+    String searchPlaceName;
 
+    @BeforeEach
+    void setUp() {
         authorizationPage
                 .openPage()
                 .login(Admin.username, Admin.password);
@@ -41,8 +33,21 @@ public class SearchPlaceCreationTest extends TestBase {
                 .openSearchPlaceListPage();
 
         searchPlaceListPage
+                .pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT)
                 .clickNewSearchPlaceButton();
 
+        searchPlaceName = getRandomName();
+    }
+
+
+    @Test
+    @Tag("smoke")
+    @Feature("Место поиска")
+    @Story("Создание места поиска")
+    @DisplayName("Создание места поиска FileShare - SMB")
+    @Description("Тест проверяет возможность создания места поиска FileShare - SMB")
+    @Severity(SeverityLevel.CRITICAL)
+    public void searchPlaceFileShareSMBCreationPositiveTest() {
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
                 .inputName(searchPlaceName)
@@ -53,11 +58,6 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("C:\\\\")
                 .clickCreateNewSearchPlace();
-
-        entityActionResultWindow
-                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
-
-        searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
 
     @Test
@@ -66,20 +66,8 @@ public class SearchPlaceCreationTest extends TestBase {
     @Story("Создание места поиска")
     @DisplayName("Создание места поиска FileShare - FTP без порта")
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP без порта")
-    @Severity(SeverityLevel.BLOCKER)
-    void searchPlaceFileShareFTPWithoutPortCreationPositiveTest() {
-        String searchPlaceName = getRandomName();
-
-        authorizationPage
-                .openPage()
-                .login(Admin.username, Admin.password);
-
-        menu
-                .openSearchPlaceListPage();
-
-        searchPlaceListPage
-                .clickNewSearchPlaceButton();
-
+    @Severity(SeverityLevel.CRITICAL)
+    public void searchPlaceFileShareFTPWithoutPortCreationPositiveTest() {
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
                 .inputName(searchPlaceName)
@@ -90,11 +78,6 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
-
-        entityActionResultWindow
-                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
-
-        searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
 
     @Test
@@ -103,20 +86,8 @@ public class SearchPlaceCreationTest extends TestBase {
     @Story("Создание места поиска")
     @DisplayName("Создание места поиска FileShare - FTP с портом")
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP с портом")
-    @Severity(SeverityLevel.BLOCKER)
-    void searchPlaceFileShareFTPWithPortCreationPositiveTest() {
-        String searchPlaceName = getRandomName();
-
-        authorizationPage
-                .openPage()
-                .login(Admin.username, Admin.password);
-
-        menu
-                .openSearchPlaceListPage();
-
-        searchPlaceListPage
-                .clickNewSearchPlaceButton();
-
+    @Severity(SeverityLevel.CRITICAL)
+    public void searchPlaceFileShareFTPWithPortCreationPositiveTest() {
         searchPlaceCreationEditingPage
                 .pageHeaderContainsText(SearchPlaceCreationEditingPage.HEADER_CREATION_TEXT)
                 .inputName(searchPlaceName)
@@ -128,11 +99,13 @@ public class SearchPlaceCreationTest extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
+    }
 
+    @AfterEach
+    void tearDown() {
         entityActionResultWindow
                 .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
 
         searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
-
 }

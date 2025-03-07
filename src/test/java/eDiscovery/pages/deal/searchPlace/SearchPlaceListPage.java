@@ -14,7 +14,7 @@ public class SearchPlaceListPage {
 
     private final SelenideElement
             pageHeader                          = $("h2"),
-            newSearchPlaceButton                 = $(byText("Новое"));
+            newSearchPlaceButton                = $(byText("Новое"));
 
     @Step("Заголовок страницы отображает текст")
     public SearchPlaceListPage pageHeaderContainsText(String text){
