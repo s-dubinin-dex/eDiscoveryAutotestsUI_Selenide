@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
 
+@DisplayName("Создание мест поиска")
 public class SearchPlaceCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();

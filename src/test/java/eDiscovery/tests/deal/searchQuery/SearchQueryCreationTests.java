@@ -18,6 +18,7 @@ import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
 
+@DisplayName("Создание поисковых запросов")
 public class SearchQueryCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();

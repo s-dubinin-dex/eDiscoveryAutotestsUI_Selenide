@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
 
+@DisplayName("Создание фильтров по метаданным")
 public class MetadataFilterCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
