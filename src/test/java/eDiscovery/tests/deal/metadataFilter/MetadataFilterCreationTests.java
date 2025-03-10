@@ -1,14 +1,15 @@
 package eDiscovery.tests.deal.metadataFilter;
 
 import eDiscovery.TestBase;
+import eDiscovery.helpers.RelativeURL;
 import eDiscovery.pages.authorization.AuthorizationPage;
 import eDiscovery.pages.common.entityActionResult.EntityActionResultWindow;
-import eDiscovery.pages.common.menu.Menu;
 import eDiscovery.pages.deal.metadataFilter.MetadataFilterCreationEditingPage;
 import eDiscovery.pages.deal.metadataFilter.MetadataFilterListPage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 
+import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
@@ -17,7 +18,6 @@ import static eDiscovery.testData.AdminPanelUsers.Admin;
 public class MetadataFilterCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
-    Menu menu = page(Menu.class);
     MetadataFilterListPage metadataFilterListPage = page(MetadataFilterListPage.class);
     MetadataFilterCreationEditingPage metadataFilterCreationEditingPage = page(MetadataFilterCreationEditingPage.class);
     EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
@@ -28,17 +28,13 @@ public class MetadataFilterCreationTests extends TestBase {
     void setUp() {
         authorizationPage
                 .openPage()
-                .login(Admin.username, Admin.password);
+                .login(Admin.username, Admin.password)
+                .authorizationPageDisappear();
 
-        menu
-                .openMetadataFiltersListPage();
+        open(RelativeURL.URL_METADATA_FILTERS_LIST);
 
         metadataFilterListPage
-                .pageHeaderContainsText(MetadataFilterListPage.HEADER_LIST_TEXT)
                 .clickNewMetadataFilterButton();
-
-        metadataFilterCreationEditingPage
-                .pageHeaderContainsText(MetadataFilterCreationEditingPage.HEADER_CREATION_TEXT);
 
         metadataFilterName = getRandomName();
     }
@@ -57,6 +53,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .inputFileSizeFrom(10)
                 .inputFileSizeTo(150)
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -73,6 +72,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .inputFileCreationDateFrom("01.03.2025")
                 .inputFileCreationDateTo("05.03.2025")
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -88,6 +90,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .selectAttribute("Расположение файла")
                 .inputFileLocation("C:\\\\Windows")
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -104,6 +109,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .inputLastFileEditingDateFrom("01.03.2025")
                 .inputLastFileEditingDateTo("05.03.2025")
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -119,6 +127,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .selectAttribute("Название файла")
                 .inputFileName(".*квартальный отчёт.*")
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -134,6 +145,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .selectAttribute("Тип файла")
                 .selectFileType("Presentation")
                 .clickCreateNewMetadataFilter();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
     }
 
     @Test
@@ -149,14 +163,9 @@ public class MetadataFilterCreationTests extends TestBase {
                 .selectAttribute("Хэш файла")
                 .inputFileHash("a94a8fe5ccb19ba61c4c0873d391e987982fbbd3")
                 .clickCreateNewMetadataFilter();
-    }
 
-    @AfterEach
-    void tearDown() {
         entityActionResultWindow
                 .entityActionResultTextHaveExactText(String.format("Фильтр по метаданным «%s» успешно добавлен", metadataFilterName));
-
-        metadataFilterListPage
-                .pageHeaderContainsText(MetadataFilterListPage.HEADER_LIST_TEXT);
     }
+
 }
