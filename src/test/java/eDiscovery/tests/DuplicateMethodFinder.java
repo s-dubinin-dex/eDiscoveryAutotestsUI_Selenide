@@ -123,8 +123,10 @@ public class DuplicateMethodFinder {
 
     private static List<String> allowedMethodsNames(){
         return List.of(
+                "beforeAll",
                 "setUp",
-                "tearDown"
+                "tearDown",
+                "afterAll"
         );
     }
 }
