@@ -4,6 +4,7 @@ package eDiscovery.pages.authorization;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import static com.codeborne.selenide.Condition.disappear;
 import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -46,4 +47,8 @@ public class AuthorizationPage {
                 .clickLoginButton();
     }
 
+    public AuthorizationPage authorizationPageDisappear(){
+        loginButton.should(disappear);
+        return this;
+    }
 }
