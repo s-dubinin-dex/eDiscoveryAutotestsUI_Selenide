@@ -1,14 +1,15 @@
 package eDiscovery.tests.deal.searchPlace;
 
 import eDiscovery.TestBase;
+import eDiscovery.helpers.RelativeURL;
 import eDiscovery.pages.authorization.AuthorizationPage;
 import eDiscovery.pages.common.entityActionResult.EntityActionResultWindow;
-import eDiscovery.pages.common.menu.Menu;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceCreationEditingPage;
 import eDiscovery.pages.deal.searchPlace.SearchPlaceListPage;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 
+import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
@@ -17,7 +18,6 @@ import static eDiscovery.testData.AdminPanelUsers.Admin;
 public class SearchPlaceCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
-    Menu menu = page(Menu.class);
     SearchPlaceListPage searchPlaceListPage = page(SearchPlaceListPage.class);
     SearchPlaceCreationEditingPage searchPlaceCreationEditingPage = page(SearchPlaceCreationEditingPage.class);
     EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
@@ -28,22 +28,20 @@ public class SearchPlaceCreationTests extends TestBase {
     void setUp() {
         authorizationPage
                 .openPage()
-                .login(Admin.username, Admin.password);
+                .login(Admin.username, Admin.password)
+                .authorizationPageDisappear();
 
-        menu
-                .openSearchPlaceListPage();
+        open(RelativeURL.URL_SEARCH_PLACES_LIST);
 
         searchPlaceListPage
-                .pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT)
                 .clickNewSearchPlaceButton();
 
         searchPlaceName = getRandomName();
     }
 
-
     @Test
     @Tag("smoke")
-    @Feature("Место поиска")
+    @Feature("Места поиска")
     @Story("Создание места поиска")
     @DisplayName("Создание места поиска FileShare - SMB")
     @Description("Тест проверяет возможность создания места поиска FileShare - SMB")
@@ -59,11 +57,14 @@ public class SearchPlaceCreationTests extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("C:\\\\")
                 .clickCreateNewSearchPlace();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
     }
 
     @Test
     @Tag("smoke")
-    @Feature("Место поиска")
+    @Feature("Места поиска")
     @Story("Создание места поиска")
     @DisplayName("Создание места поиска FileShare - FTP без порта")
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP без порта")
@@ -79,11 +80,14 @@ public class SearchPlaceCreationTests extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
+
+        entityActionResultWindow
+                .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
     }
 
     @Test
     @Tag("smoke")
-    @Feature("Место поиска")
+    @Feature("Места поиска")
     @Story("Создание места поиска")
     @DisplayName("Создание места поиска FileShare - FTP с портом")
     @Description("Тест проверяет возможность создания места поиска FileShare - FTP с портом")
@@ -100,13 +104,9 @@ public class SearchPlaceCreationTests extends TestBase {
                 .inputPassword("p@ssw0rd")
                 .inputExcludes("\\data\\")
                 .clickCreateNewSearchPlace();
-    }
 
-    @AfterEach
-    void tearDown() {
         entityActionResultWindow
                 .entityActionResultTextHaveExactText(String.format("Место поиска «%s» успешно добавлено", searchPlaceName));
-
-        searchPlaceListPage.pageHeaderContainsText(SearchPlaceListPage.HEADER_LIST_TEXT);
     }
+
 }
