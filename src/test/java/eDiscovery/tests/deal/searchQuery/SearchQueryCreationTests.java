@@ -1,19 +1,19 @@
 package eDiscovery.tests.deal.searchQuery;
 
 import eDiscovery.TestBase;
+import eDiscovery.helpers.RelativeURL;
 import eDiscovery.pages.authorization.AuthorizationPage;
 import eDiscovery.pages.common.entityActionResult.EntityActionResultWindow;
-import eDiscovery.pages.common.menu.Menu;
 import eDiscovery.pages.deal.searchQuery.SearchQueryCreationEditingPage;
 import eDiscovery.pages.deal.searchQuery.SearchQueryListPage;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static eDiscovery.dataGenerator.DataGeneratorCommon.getRandomName;
 import static eDiscovery.testData.AdminPanelUsers.Admin;
@@ -22,7 +22,6 @@ import static eDiscovery.testData.AdminPanelUsers.Admin;
 public class SearchQueryCreationTests extends TestBase {
 
     AuthorizationPage authorizationPage = new AuthorizationPage();
-    Menu menu = page(Menu.class);
     SearchQueryListPage searchQueryListPage = page(SearchQueryListPage.class);
     SearchQueryCreationEditingPage searchQueryCreationPage = page(SearchQueryCreationEditingPage.class);
     EntityActionResultWindow entityActionResultWindow = page(EntityActionResultWindow.class);
@@ -33,13 +32,12 @@ public class SearchQueryCreationTests extends TestBase {
     void setUp() {
         authorizationPage
                 .openPage()
-                .login(Admin.username, Admin.password);
+                .login(Admin.username, Admin.password)
+                .authorizationPageDisappear();
 
-        menu
-                .openSearchQueryListPage();
+        open(RelativeURL.URL_SEARCH_QUERY_LIST);
 
         searchQueryListPage
-                .pageHeaderContainsText(SearchQueryListPage.HEADER_LIST_TEXT)
                 .clickNewSearchQueryButton();
 
         searchQueryName = getRandomName();
@@ -47,7 +45,7 @@ public class SearchQueryCreationTests extends TestBase {
 
     @ParameterizedTest
     @Tag("smoke")
-    @Feature("Поисковый запрос")
+    @Feature("Поисковые запросы")
     @Story("Создание поискового запроса")
     @DisplayName("Создание поискового запроса")
     @Description("Тест проверяет возможность создания поискового запроса")
@@ -63,15 +61,9 @@ public class SearchQueryCreationTests extends TestBase {
                 .selectType(searchQueryType)
                 .inputValue(searchQueryValue)
                 .clickCreateNewSearchQuery();
-    }
 
-    @AfterEach
-    void tearDown() {
         entityActionResultWindow
                 .entityActionResultTextHaveExactText(String.format("Поисковый запрос «%s» успешно добавлен", searchQueryName));
-
-        searchQueryListPage
-                .pageHeaderContainsText(SearchQueryListPage.HEADER_LIST_TEXT);
     }
 
 }
